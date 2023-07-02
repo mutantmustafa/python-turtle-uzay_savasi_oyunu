@@ -1,0 +1,109 @@
+import turtle,random
+import winsound
+
+
+pencere=turtle.Screen()
+pencere.title('uzay savaşı')
+pencere.bgcolor('black')
+pencere.bgpic('uzay.gif')
+pencere.setup(width=600,height=600)
+pencere.tracer(0)
+
+turtle.register_shape('oyuncu.gif')
+turtle.register_shape('ates.gif')
+turtle.register_shape('dusman.gif')
+
+oyuncu=turtle.Turtle()
+oyuncu.speed(0)
+oyuncu.shape('oyuncu.gif')
+oyuncu.color('white')
+oyuncu.setheading(90)
+oyuncu.penup()
+oyuncu.goto(0,-200)
+
+def yukarı():
+    y=oyuncu.ycor()
+    y+=20
+    if oyuncu.ycor()>300:
+        y=300
+    oyuncu.sety(y)
+
+def aşağı():
+    y=oyuncu.ycor()
+    y-=20
+    if oyuncu.ycor()<-300:
+        y=-300
+    oyuncu.sety(y)
+
+def right():
+    x=oyuncu.xcor()
+    x+=20
+    if oyuncu.xcor()>300:
+        x=300
+    oyuncu.setx(x)
+
+
+def left():
+    x=oyuncu.xcor()
+    x-=20
+    if oyuncu.xcor()<-300:
+        x=-300
+    oyuncu.setx(x)
+
+pencere.listen()
+pencere.onkey(yukarı,'Up')
+pencere.onkey(aşağı,'Down')
+pencere.onkey(right,'Right')
+pencere.onkey(left,'Left')
+
+ates=turtle.Turtle()
+ates.speed(0)
+ates.shape('ates.gif')
+ates.color('red')
+ates.setheading(90)
+ates.penup()
+ates.hideturtle()
+ates.goto(0,-100000)
+
+
+
+def move():
+    ates.forward(1)
+
+def ateset():
+    ates.showturtle()
+    winsound.PlaySound('lazer.wav', winsound.SND_ASYNC)
+    y=oyuncu.ycor()
+    x=oyuncu.xcor()
+    ates.goto(x,y)
+
+
+pencere.listen()
+pencere.onkey(ateset, 'w')
+
+a=200
+maxdüşman=10
+düşmanlar=[]
+for i in range(maxdüşman):
+    düşmanlar.append(turtle.Turtle())
+    düşmanlar[i].speed(0)
+    düşmanlar[i].shape('dusman.gif')
+    düşmanlar[i].color('green')
+    düşmanlar[i].setheading(90)
+    düşmanlar[i].penup()
+    düşmanlar[i].goto(random.randint(a,300),random.randint(200,300))
+    a-=70
+
+def move2():
+    for i in range(maxdüşman):
+     y=düşmanlar[i].ycor()
+     y-=0.1
+     düşmanlar[i].sety(y)
+
+while True:
+    pencere.update()
+    move()
+    move2()
+    for i in range(maxdüşman):
+        if ates.distance(düşmanlar[i])<20:
+            düşmanlar[i].hideturtle()
